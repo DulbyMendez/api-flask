@@ -2,8 +2,7 @@
     "builds": [
         {
             "src": "api/main.py",
-            "use": "@vercel/python",
-            "command": "pip install -r requirements.txt && flask build"
+            "use": "@vercel/python"
         }
     ],
     "routes": [
