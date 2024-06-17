@@ -43,7 +43,14 @@ def index():
 def get_categories():
     categories = []
     for doc in db.collection('categories').stream():
-        categories.append(doc.to_dict())
+        document_id = doc.id  # Get the document ID
+        document_data = doc.to_dict()  # Get the document data (including ID)
+        combined_data = {
+            "id": document_id,  # Add the ID to the data
+            **document_data  # Unpack the existing document data
+        }
+        categories.append(combined_data)
+        """ categories.append(doc.to_dict()) """
     if (categories):
         return jsonify({
             "status": "success",
