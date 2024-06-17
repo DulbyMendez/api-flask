@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 app = Flask(__name__)
 CORS(app)
 
-""" load_dotenv(dotenv_path=".env")
+load_dotenv(dotenv_path=".env")
 credentials_env = {
     "type": 'service_account',
     "project_id": os.environ.get('PROJECT_ID'),
@@ -25,13 +25,13 @@ credentials_env = {
 }
 cred = credentials.Certificate(credentials_env)
 firebase_admin.initialize_app(cred)
-db = firestore.client() """
+db = firestore.client()
 
 @app.route('/')
 def index():
     return jsonify({'message': 'Hello Elizabeth and Emily!'})
 
-""" @app.route('/api/categories', methods=['GET'])
+@app.route('/api/categories', methods=['GET'])
 def get_categories():
     categories = []
     for doc in db.collection('categories').stream():
@@ -46,7 +46,7 @@ def create_category():
     category_ref = db.collection('categories').document()
     category_ref.set(data)
     return jsonify({'message': 'Categoría creada correctamente'}), 200
- """
+
 
 if __name__ == '__main__':
     app.run(debug=True)
