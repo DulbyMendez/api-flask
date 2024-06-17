@@ -27,10 +27,10 @@ cred = credentials.Certificate(credentials_env)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-error_message = jsonify({
+error_message = {
             "status": "error",
             "message": "Ha ocurrido un error inesperado"
-    })
+    }
 
 @app.route('/')
 def index():
@@ -50,7 +50,7 @@ def get_categories():
             "message": "Categories querried successfully",
             "data":categories
         })
-    else : return error_message
+    else : return jsonify(error_message)
 
 @app.route('/api/category', methods=['GET', 'POST'])
 def create_category():
@@ -65,7 +65,7 @@ def create_category():
             "message": "Categoría creada correctamente",
             "data":category_ref
         }), 200
-    else: error_message
+    else: jsonify(error_message)
 
 
 
