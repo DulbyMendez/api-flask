@@ -62,7 +62,12 @@ def get_categories():
 def get_category_id(id):
     doc_ref = db.collection('categories').document(id)
     doc = doc_ref.get()
-
+    doc_id = doc_ref.id
+    combined_data = {
+            "id": doc_id,  # Add the ID to the data
+            **doc  # Unpack the existing document data
+        }
+    doc.append(combined_data)
     if doc.exists:
         data = doc.to_dict()
         return jsonify({
