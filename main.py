@@ -60,20 +60,20 @@ def get_categories():
 
 @app.route('/api/categories/<id>', methods=['GET'])
 def get_category_id(id):
+    data_combined = []
     doc_ref = db.collection('categories').document(id)
     doc = doc_ref.get()
-    doc_id = doc_ref.id
-    combined_data = {
-            "id": doc_id,  # Add the ID to the data
-            **doc  # Unpack the existing document data
-        }
-    doc.append(combined_data)
     if doc.exists:
         data = doc.to_dict()
+        combined_data = {
+            "id": id,
+            **data
+        }
+        data_combined.append(combined_data)
         return jsonify({
             "status": "success",
             "message": "Category successfully querried",
-            "data": data
+            "data": data_combined
         })
     else:
         return jsonify({'message': 'Document not found'}), 404
