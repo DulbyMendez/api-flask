@@ -89,16 +89,25 @@ def create_category():
     
 @app.route('/api/category/update/<id>', methods=['PUT'])
 def update_category(id):
+    category = []
     data = request.get_json()
     print(data)
     category_ref = db.collection('categories').document(id)
     category_ref.update(data)
     updated_category = category_ref.get().to_dict()
-    if (updated_category):
+    category_id = updated_category.id  # Get the document ID
+    document_data = updated_category.to_dict()  # Get the document data (including ID)
+    combined_data = {
+        "id": category_id,  # Add the ID to the data
+        **document_data  # Unpack the existing document data
+    }
+    category.append(combined_data)
+    
+    if (category):
         return jsonify({
             "status": "success",
             "message": "Categoría actualizada correctamente",
-            "data":updated_category
+            "data":category
         }), 200
     else: jsonify(error_message)
     
