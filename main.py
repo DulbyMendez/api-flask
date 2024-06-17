@@ -52,11 +52,25 @@ def get_categories():
         })
     else : return jsonify(error_message)
 
-@app.route('/api/category', methods=['GET', 'POST'])
+@app.route('/api/categories/<id>', methods=['GET'])
+def get_category_id(id):
+    doc_ref = db.collection('categories').document(id)
+    doc = doc_ref.get()
+
+    if doc.exists:
+        data = doc.to_dict()
+        return jsonify({
+            "status": "success",
+            "message": "Category successfully querried",
+            "data": data
+        })
+    else:
+        return jsonify({'message': 'Document not found'}), 404
+
+@app.route('/api/category', methods=['POST'])
 def create_category():
     data = request.get_json()
     # Validar los datos de la categoría (opcional)
-    # ...
     category_ref = db.collection('categories').document()
     category_ref.set(data)
     if (category_ref):
@@ -67,7 +81,35 @@ def create_category():
         }), 200
     else: jsonify(error_message)
 
-
+@app.route('/api/category-seed', methods=['POST'])
+def seed_categories():
+    categories_data = [
+        {"name": "Lectura", "description": "Libros, revistas, artículos", "created_at": "10-08-1985"},
+        {"name": "Ejercicio", "description": "Deportes, entrenamiento, fitness", "created_at": "10-08-1985"},
+        {"name": "Películas y Series", "description": "Cine, televisión, streaming", "created_at": "10-08-1985"},
+        {"name": "Videojuegos", "description": "Consolas, juegos de PC, juegos móviles", "created_at": "10-08-1985"},
+        {"name": "Recetas y Cocina", "description": "Recetas, cocina, gastronomía", "created_at": "10-08-1985"},
+        {"name": "Música", "description": "Escuchar música, tocar instrumentos, conciertos", "created_at": "10-08-1985"},
+        {"name": "Otros", "description": "Cualquier otra actividad", "created_at": "10-08-1985"},
+    ]
+    try:
+        all_categories_data = []
+        for category in categories_data:
+            category_ref = db.collection('categories').document()
+            category_ref.set(category)
+            category_data = category_ref.get().to_dict()
+            all_categories_data.append(category_data)
+        return jsonify({
+            "status": "success",
+            "message": "Categoría creada correctamente",
+            "data":all_categories_data
+        }), 200
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": f"Error al sembrar las categorías: {str(e)}"
+        }), 500
+        """ jsonify(error_message) """
 
 
 if __name__ == '__main__':
