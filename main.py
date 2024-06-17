@@ -87,7 +87,7 @@ def create_category():
         }), 200
     else: jsonify(error_message)
     
-@app.route('api/category/update/<id>', methods=['PUT'])
+@app.route('/api/category/update/<id>', methods=['PUT'])
 def update_category(id):
     data = request.get_json()
     category_ref = db.collection('categories').document(id)
@@ -100,7 +100,7 @@ def update_category(id):
         }), 200
     else: jsonify(error_message)
     
-@app.route('api/category/delete/<id>', methods=['DELETE'])
+@app.route('/api/category/delete/<id>', methods=['DELETE'])
 def delete_category(id):
     document_ref = db.collection('categories').document(id)
     try:
