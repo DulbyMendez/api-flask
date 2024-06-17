@@ -1,14 +1,17 @@
 {
     "builds": [
         {
-            "src": "./api/main.py",
+            "src": "api/main.py",
             "use": "@vercel/python"
         }
     ],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "./api/main.py"
+            "dest": "api/main.py"
         }
-    ]
+    ],
+    "env": {
+        "FLASK_ENV": "production"
+    }
 }
