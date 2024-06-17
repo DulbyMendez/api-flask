@@ -28,9 +28,9 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 error_message = {
-            "status": "error",
-            "message": "Ha ocurrido un error inesperado"
-    }
+    "status": "error",
+    "message": "Ha ocurrido un error inesperado"
+}
 
 @app.route('/')
 def index():
@@ -50,7 +50,6 @@ def get_categories():
             **document_data  # Unpack the existing document data
         }
         categories.append(combined_data)
-        """ categories.append(doc.to_dict()) """
     if (categories):
         return jsonify({
             "status": "success",
@@ -87,6 +86,34 @@ def create_category():
             "data":category_ref
         }), 200
     else: jsonify(error_message)
+    
+@app.route('api/category/update/<id>', methods=['PUT'])
+def update_category(id):
+    data = request.get_json()
+    category_ref = db.collection('categories').document(id)
+    category_ref.update(data)
+    if (category_ref):
+        return jsonify({
+            "status": "success",
+            "message": "Categoría actualizada correctamente",
+            "data":category_ref
+        }), 200
+    else: jsonify(error_message)
+    
+@app.route('api/category/delete/<id>', methods=['DELETE'])
+def delete_category(id):
+    document_ref = db.collection('categories').document(id)
+    try:
+         # Delete the document
+        document_ref.delete()
+        return jsonify({
+            "status": "success",
+            "message": 'Document deleted successfully'
+        })
+    except Exception as e:
+        # Handle potential errors
+        return jsonify({'message': 'Error deleting document {e}'}), 500
+
 
 @app.route('/api/category-seed', methods=['POST'])
 def seed_categories():
