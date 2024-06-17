@@ -95,11 +95,11 @@ def update_category(id):
     category_ref = db.collection('categories').document(id)
     category_ref.update(data)
     updated_category = category_ref.get().to_dict()
-    category_id = updated_category.id  # Get the document ID
-    document_data = updated_category.to_dict()  # Get the document data (including ID)
+    category_id = category_ref.id  # Get the document ID
+    """ document_data = category_ref.to_dict()  # Get the document data (including ID) """
     combined_data = {
         "id": category_id,  # Add the ID to the data
-        **document_data  # Unpack the existing document data
+        **updated_category  # Unpack the existing document data
     }
     category.append(combined_data)
     
