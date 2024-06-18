@@ -58,6 +58,25 @@ def get_categories():
         })
     else : return jsonify(error_message)
 
+@app.route('/api/latest-categories', methods=['GET'])
+def get_latest_categories():
+    categories = []
+    for doc in db.collection('categories').order_by('created_at').limit(5).get() :
+        document_id = doc.id  # Get the document ID
+        document_data = doc.to_dict()  # Get the document data (including ID)
+        combined_data = {
+            "id": document_id,  # Add the ID to the data
+            **document_data  # Unpack the existing document data
+        }
+        categories.append(combined_data)
+    if (categories):
+        return jsonify({
+            "status": "success",
+            "message": "Categories querried successfully",
+            "data":categories
+        })
+    else : return jsonify(error_message)
+
 @app.route('/api/categories/<id>', methods=['GET'])
 def get_category_id(id):
     data_combined = []
@@ -101,7 +120,6 @@ def update_category(id):
     category_ref.update(data)
     updated_category = category_ref.get().to_dict()
     category_id = category_ref.id  # Get the document ID
-    """ document_data = category_ref.to_dict()  # Get the document data (including ID) """
     combined_data = {
         "id": category_id,  # Add the ID to the data
         **updated_category  # Unpack the existing document data
@@ -159,7 +177,6 @@ def seed_categories():
             "status": "error",
             "message": f"Error al sembrar las categorías: {str(e)}"
         }), 500
-        """ jsonify(error_message) """
 
 
 if __name__ == '__main__':
